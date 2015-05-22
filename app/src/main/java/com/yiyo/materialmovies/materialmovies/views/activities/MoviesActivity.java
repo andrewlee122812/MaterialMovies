@@ -1,9 +1,9 @@
 package com.yiyo.materialmovies.materialmovies.views.activities;
 
 import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +14,7 @@ import com.yiyo.materialmovies.materialmovies.R;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.PopularShowsPresenter;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.PopularShowsPresenterImpl;
 import com.yiyo.materialmovies.materialmovies.mvp.views.PopularMoviesView;
-import com.yiyo.materialmovies.model.entities.PopularMoviesApiResponse;
+import com.yiyo.materialmovies.materialmovies.views.adapters.MoviesAdapter;
 import com.yiyo.materialmovies.model.entities.TvMovie;
 
 import java.util.List;
@@ -23,7 +23,9 @@ import java.util.List;
 public class MoviesActivity extends AppCompatActivity implements PopularMoviesView {
 
     private PopularShowsPresenter popularShowsPresenter;
+    private RecyclerView popularMoviesRecycler;
     private ProgressBar loadingProgressBar;
+    private MoviesAdapter moviesAdapter;
     private TextView errorTextView;
 
     @Override
@@ -39,6 +41,11 @@ public class MoviesActivity extends AppCompatActivity implements PopularMoviesVi
     protected void onStop() {
         super.onStop();
         popularShowsPresenter.onStop();
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 
     @Override
@@ -65,7 +72,8 @@ public class MoviesActivity extends AppCompatActivity implements PopularMoviesVi
 
     @Override
     public void showMovies(List<TvMovie> movieList) {
-
+        moviesAdapter = new MoviesAdapter(movieList);
+        popularMoviesRecycler.setAdapter(moviesAdapter);
     }
 
     @Override
@@ -89,8 +97,5 @@ public class MoviesActivity extends AppCompatActivity implements PopularMoviesVi
         errorTextView.setVisibility(View.GONE);
     }
 
-    @Override
-    public Context getContext() {
-        return this;
-    }
+
 }
