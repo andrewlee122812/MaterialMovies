@@ -17,6 +17,7 @@ import com.yiyo.materialmovies.materialmovies.R;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.PopularShowsPresenter;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.PopularShowsPresenterImpl;
 import com.yiyo.materialmovies.materialmovies.mvp.views.PopularMoviesView;
+import com.yiyo.materialmovies.materialmovies.utils.RecyclerInsetsDecoration;
 import com.yiyo.materialmovies.materialmovies.views.adapters.MoviesAdapter;
 import com.yiyo.materialmovies.model.entities.TvMovie;
 
