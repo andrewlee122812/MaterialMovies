@@ -2,15 +2,21 @@ package com.yiyo.materialmovies.materialmovies.views.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.graphics.Palette;
+import android.transition.Slide;
 import android.transition.Transition;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yiyo.materialmovies.materialmovies.R;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.MovieDetailPresenter;
@@ -26,6 +32,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.InjectViews;
+import butterknife.OnClick;
 
 /**
  * Created by sumset on 25/05/15.
@@ -120,57 +127,85 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
 
     @Override
     public void setImage(String url) {
+        Bitmap bookCoverBitmap = MoviesActivity.photoCache.get(0);
+        coverImageView.setBackground(new BitmapDrawable(getResources(), bookCoverBitmap));
 
+        Palette.generateAsync(bookCoverBitmap, this);
     }
 
     @Override
     public void setName(String title) {
-
+        movieInfoTextViews.get(TITLE).setText(title);
     }
 
     @Override
     public void setDescription(String description) {
-
+        movieInfoTextViews.get(DESCRIPTION).setText(description);
     }
 
     @Override
     public void setHomepage(String homepage) {
-
+        movieInfoTextViews.get(HOMEPAGE).setVisibility(View.VISIBLE);
+        movieInfoTextViews.get(HOMEPAGE).setText(homepage);
     }
 
     @Override
     public void setCompanies(String companies) {
-
+        movieInfoTextViews.get(COMPANY).setVisibility(View.VISIBLE);
+        movieInfoTextViews.get(COMPANY).setText(companies);
     }
 
     @Override
     public void setTagline(String tagline) {
-
+        movieInfoTextViews.get(TAGLINE).setText(tagline);
     }
 
     @Override
     public void finish(String cause) {
-
+        Toast.makeText(this, cause, Toast.LENGTH_SHORT).show();
+        this.finish();
     }
 
     @Override
     public void showConfirmationView() {
-
+        GUIUtils.showViewByRevealEffect(confirmationContainer, fabButton,
+                GUIUtils.getWindowWidth(this));
+        animateConfirmationView();
+        startClosingConfirmationView();
     }
 
     @Override
     public void animateConfirmationView() {
+        Drawable drawable = confirmationView.getDrawable();
 
+        if (drawable instanceof Animatable) {
+            ((Animatable) drawable).start();
+        }
     }
 
     @Override
     public void startClosingConfirmationView() {
 
+        int milliseconds = 1500;
+        getWindow().setReturnTransition(new Slide());
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                observableScrollView.setVisibility(View.GONE);
+                MovieDetailActivity.this.finishAfterTransition();
+            }
+        }, milliseconds);
     }
 
     @Override
     public Context getContext() {
         return null;
+    }
+
+    @OnClick(R.id.activity_movie_detail_fab)
+    public void onClick() {
+        showConfirmationView();
     }
 
     @Override

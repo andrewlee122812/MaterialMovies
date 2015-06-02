@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewPropertyAnimator;
@@ -64,6 +66,14 @@ public class GUIUtils {
         w.setFlags(
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+    }
+
+    public static int getWindowWidth(Activity activity) {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        return size.y;
     }
 
     public static final ButterKnife.Setter<TextView, Integer> setter = new ButterKnife.Setter<TextView, Integer>() {
