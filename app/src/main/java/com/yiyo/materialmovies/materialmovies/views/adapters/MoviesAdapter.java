@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.yiyo.materialmovies.common.utils.Constants;
 import com.yiyo.materialmovies.materialmovies.R;
 import com.yiyo.materialmovies.materialmovies.utils.MyOwnClickListener;
 import com.yiyo.materialmovies.model.entities.TvMovie;
@@ -49,6 +51,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
 
+        TvMovie selectedMovie = movieList.get(position);
+
+        holder.titleTextView.setText(selectedMovie.getTitle());
+        holder.coverImageView.setTransitionName("cover" + position);
+
+        String posterUrl = Constants.POSTER_PREFIX + selectedMovie.getPosterPath();
+
+        Picasso.with(context)
+                .load(posterUrl)
+                .into(holder.coverImageView);
     }
 
     @Override

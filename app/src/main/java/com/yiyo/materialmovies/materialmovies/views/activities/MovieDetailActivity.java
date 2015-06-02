@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.yiyo.materialmovies.materialmovies.R;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.MovieDetailPresenter;
+import com.yiyo.materialmovies.materialmovies.mvp.presenters.MovieDetailPresenterImpl;
 import com.yiyo.materialmovies.materialmovies.mvp.views.MVPDetailView;
 import com.yiyo.materialmovies.materialmovies.utils.GUIUtils;
 import com.yiyo.materialmovies.materialmovies.utils.MyOwnTransitionListener;
@@ -104,6 +105,17 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
     @Override
     public void onGenerated(Palette palette) {
 
+        if (palette != null) {
+            Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+
+            Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
+
+            Palette.Swatch lightVibrantSwatch = palette.getLightVibrantSwatch();
+
+            if (lightVibrantSwatch != null) {
+
+            }
+        }
     }
 
     @Override

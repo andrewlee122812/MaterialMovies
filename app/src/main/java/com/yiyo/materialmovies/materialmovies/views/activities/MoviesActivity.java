@@ -1,14 +1,20 @@
 package com.yiyo.materialmovies.materialmovies.views.activities;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -17,6 +23,7 @@ import com.yiyo.materialmovies.materialmovies.R;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.PopularShowsPresenter;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.PopularShowsPresenterImpl;
 import com.yiyo.materialmovies.materialmovies.mvp.views.PopularMoviesView;
+import com.yiyo.materialmovies.materialmovies.utils.MyOwnClickListener;
 import com.yiyo.materialmovies.materialmovies.utils.RecyclerInsetsDecoration;
 import com.yiyo.materialmovies.materialmovies.views.adapters.MoviesAdapter;
 import com.yiyo.materialmovies.model.entities.TvMovie;
@@ -26,7 +33,8 @@ import java.util.List;
 import butterknife.InjectView;
 
 
-public class MoviesActivity extends AppCompatActivity implements PopularMoviesView, View.OnClickListener {
+public class MoviesActivity extends AppCompatActivity implements PopularMoviesView,
+        MyOwnClickListener, View.OnClickListener {
 
     private static final int COLUMNS = 2;
 
@@ -37,6 +45,8 @@ public class MoviesActivity extends AppCompatActivity implements PopularMoviesVi
     private ProgressBar loadingProgressBar;
     private MoviesAdapter moviesAdapter;
     private TextView errorTextView;
+
+    public static SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +129,23 @@ public class MoviesActivity extends AppCompatActivity implements PopularMoviesVi
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v, int position) {
+        Intent i = new Intent (MoviesActivity.this, MovieDetailActivity.class);
 
+        String movieID = moviesAdapter.getMovieList().get(position).getId();
+
+        i.putExtra("movie_id", movieID);
+        i.putExtra("movie_position", position);
+
+        ImageView coverImage = (ImageView) v.findViewById(R.id.item_movie_cover);
+
+        photoCache.put(0, coverImage.getDrawingCache());
+
+        // Setup the transition to the detail activity
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this,
+                        new Pair<View, String>(v, "cover" + position));
+
+        startActivity(i, options.toBundle());
     }
 
     private RecyclerView.OnScrollListener recyclerScrollListener = new RecyclerView.OnScrollListener() {
@@ -159,5 +184,10 @@ public class MoviesActivity extends AppCompatActivity implements PopularMoviesVi
 
     private void hideToolbar() {
         toolbar.startAnimation(AnimationUtils.loadAnimation(this, R.anim.translate_up_on));
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }
