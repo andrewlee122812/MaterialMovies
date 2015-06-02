@@ -9,11 +9,14 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewPropertyAnimator;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.yiyo.materialmovies.materialmovies.R;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by sumset on 27/05/15.
@@ -33,6 +36,12 @@ public class GUIUtils {
         textView.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null);
 
         textView.setCompoundDrawablePadding(padding);
+    }
+
+    public static ViewPropertyAnimator showViewByScale(View v) {
+        ViewPropertyAnimator propertyAnimator = v.animate().setStartDelay(DEFAULT_DELAY)
+                .scaleX(1).scaleY(1);
+        return propertyAnimator;
     }
 
     public static void showViewByRevealEffect(View hiddenView, View centerPointView, int height) {
@@ -56,4 +65,11 @@ public class GUIUtils {
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
+
+    public static final ButterKnife.Setter<TextView, Integer> setter = new ButterKnife.Setter<TextView, Integer>() {
+        @Override
+        public void set(TextView view, Integer value, int index) {
+            view.setTextColor(value);
+        }
+    };
 }
