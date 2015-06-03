@@ -208,9 +208,25 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
         showConfirmationView();
     }
 
+    boolean isTranslucent = false;
+
     @Override
     public void onScrollChanged(ScrollView scrollView, int x, int y, int oldx, int oldy) {
 
+        if (y > coverImageView.getHeight()) {
+            movieInfoTextViews.get(TITLE).setTranslationY(y - coverImageView.getHeight());
+
+            if (!isTranslucent) {
+                GUIUtils.setTheStatusbarNotTranslucent(this);
+                getWindow().setStatusBarColor(mBrightSwatch.getRgb());
+                isTranslucent = true;
+            }
+
+            if (y < coverImageView.getHeight() && isTranslucent) {
+                GUIUtils.makeTheStatusbarTranslucent(this);
+                isTranslucent = false;
+            }
+        }
     }
 
     private final MyOwnTransitionListener transitionListener = new MyOwnTransitionListener() {

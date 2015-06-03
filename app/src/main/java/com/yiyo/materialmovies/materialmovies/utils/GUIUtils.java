@@ -68,6 +68,14 @@ public class GUIUtils {
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 
+    public static void setTheStatusbarNotTranslucent(Activity activity) {
+        WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();
+        attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        activity.getWindow().setAttributes(attrs);
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    }
+
     public static int getWindowWidth(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         Point size = new Point();

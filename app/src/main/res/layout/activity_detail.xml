@@ -127,11 +127,11 @@
         android:background="@color/theme_primary"
         android:visibility="gone">
 
-        <com.hackvg.android.views.custom_views.LobsterTextView
+        <com.yiyo.materialmovies.materialmovies.views.custom_views.LobsterTextView
             android:id="@+id/activity_movie_detail_confirmation_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Saved !! "
+            android:text="Saved !!"
             android:layout_gravity="center_horizontal"
             android:textSize="40sp"
             android:layout_marginTop="@dimen/activity_vertical_margin_double_double"

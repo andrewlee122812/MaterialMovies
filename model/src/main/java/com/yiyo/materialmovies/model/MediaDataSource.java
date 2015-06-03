@@ -6,5 +6,5 @@ public interface MediaDataSource {
 
     public void getMovies();
 
-    public void getDetailMovie();
+    public void getDetailMovie(String id);
 }

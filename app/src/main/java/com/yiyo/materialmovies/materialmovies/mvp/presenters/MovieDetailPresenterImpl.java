@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.yiyo.materialmovies.common.utils.BusProvider;
 import com.yiyo.materialmovies.common.utils.Constants;
+import com.yiyo.materialmovies.domain.GetMovieDetailUseCaseController;
 import com.yiyo.materialmovies.domain.GetMoviesUseCaseController;
 import com.yiyo.materialmovies.domain.Usecase;
 import com.yiyo.materialmovies.materialmovies.mvp.views.MVPDetailView;
@@ -41,7 +42,7 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
 
     @Override
     public void onResume() {
-        Usecase getDetailUsecase = new GetMoviesUseCaseController(movieID);
+        Usecase getDetailUsecase = new GetMovieDetailUseCaseController(movieID);
         getDetailUsecase.execute();
     }
 

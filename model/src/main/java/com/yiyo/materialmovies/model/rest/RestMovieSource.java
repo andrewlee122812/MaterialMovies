@@ -39,7 +39,7 @@ public class RestMovieSource implements MediaDataSource {
     }
 
     @Override
-    public void getDetailMovie() {
+    public void getDetailMovie(String id) {
 
     }
 }
