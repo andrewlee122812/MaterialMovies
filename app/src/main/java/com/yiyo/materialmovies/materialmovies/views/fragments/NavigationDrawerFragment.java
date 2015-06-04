@@ -29,7 +29,7 @@ public class NavigationDrawerFragment extends Fragment {
         return drawerContent;
     }
 
-    public void setup(int fragmentId, DrawerLayout drawerLayout) {
+    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 

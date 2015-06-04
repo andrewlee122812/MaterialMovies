@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by yiyo on 10/05/15.
  */
-public interface PopularMoviesView extends MVPView {
+public interface MoviesView extends MVPView {
 
     void showMovies(List<TvMovie> movieList);
 
