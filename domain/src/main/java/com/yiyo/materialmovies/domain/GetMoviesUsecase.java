@@ -8,6 +8,10 @@ import com.yiyo.materialmovies.model.entities.PopularShowsApiResponse;
  */
 public interface GetMoviesUsecase extends Usecase {
 
+    public interface MoviesCallback {
+        public void onPopularMoviesReceived(PopularMoviesApiResponse response);
+    }
+
     public static final int TV_SHOWS = 0;
     public static final int TV_MOVIES = 1;
 
