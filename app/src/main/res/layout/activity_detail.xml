@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.hackvg.android.views.custom_views.ObservableScrollView
+    <com.yiyo.materialmovies.materialmovies.views.custom_views.ObservableScrollView
         android:id="@+id/activity_movie_detail_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
                 android:layout_height="480dp"
                 android:scaleType="fitXY"/>
 
-            <com.hackvg.android.views.custom_views.LobsterTextView
+            <com.yiyo.materialmovies.materialmovies.views.custom_views.LobsterTextView
                 android:id="@+id/activity_movie_detail_title"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
@@ -118,7 +118,7 @@
 
             </LinearLayout>
         </RelativeLayout>
-    </com.hackvg.android.views.custom_views.ObservableScrollView>
+    </com.yiyo.materialmovies.materialmovies.views.custom_views.ObservableScrollView>
 
     <FrameLayout
         android:id="@+id/activity_movie_detai_confirmation_container"

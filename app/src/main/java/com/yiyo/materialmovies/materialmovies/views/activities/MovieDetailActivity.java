@@ -3,6 +3,7 @@ package com.yiyo.materialmovies.materialmovies.views.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -145,12 +146,32 @@ public class MovieDetailActivity extends Activity implements DetailView,
 
             Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
 
-            Palette.Swatch lightVibrantSwatch = palette.getLightVibrantSwatch();
+            Palette.Swatch lightSwatch = palette.getLightVibrantSwatch();
 
-            if (lightVibrantSwatch != null) {
+            if (lightSwatch != null) {
+                mMovieDescriptionContainer.setBackgroundColor(lightSwatch.getRgb());
+                ButterKnife.apply(movieInfoTextViews, GUIUtils.setter, lightSwatch.getTitleTextColor());
+                mFabButton.getBackground().setColorFilter(lightSwatch.getRgb(), PorterDuff.Mode.MULTIPLY);
+                mConfirmationContainer.setBackgroundColor(lightSwatch.getRgb());
+            } else {
+                int primaryColor = getResources().getColor(R.color.theme_primary);
+                mFabButton.getBackground().setColorFilter(primaryColor, PorterDuff.Mode.MULTIPLY);
+                mConfirmationView.setBackgroundColor(primaryColor);
+                mMovieDescriptionContainer.setBackgroundColor(primaryColor);
+            }
 
+            if (lightSwatch == null && vibrantSwatch != null) {
+                colorBrightElements(vibrantSwatch);
+            }
+
+            if (darkVibrantSwatch != null && lightSwatch != null) {
+                colorBrightElements(darkVibrantSwatch);
             }
         }
+    }
+
+    public void colorBrightElements(Palette.Swatch brightSwatch) {
+        // TODO: Implementar este método
     }
 
     @Override
