@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.graphics.Palette;
@@ -20,8 +21,7 @@ import android.widget.Toast;
 
 import com.yiyo.materialmovies.materialmovies.R;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.MovieDetailPresenter;
-import com.yiyo.materialmovies.materialmovies.mvp.presenters.MovieDetailPresenterImpl;
-import com.yiyo.materialmovies.materialmovies.mvp.views.MVPDetailView;
+import com.yiyo.materialmovies.materialmovies.mvp.views.DetailView;
 import com.yiyo.materialmovies.materialmovies.utils.GUIUtils;
 import com.yiyo.materialmovies.materialmovies.utils.MyOwnTransitionListener;
 import com.yiyo.materialmovies.materialmovies.views.custom_views.ObservableScrollView;
@@ -37,8 +37,21 @@ import butterknife.OnClick;
 /**
  * Created by sumset on 25/05/15.
  */
-public class MovieDetailActivity extends Activity implements MVPDetailView,
+public class MovieDetailActivity extends Activity implements DetailView,
         Palette.PaletteAsyncListener, ScrollViewListener {
+
+    private final int TITLE         = 0;
+    private final int DESCRIPTION   = 1;
+    private final int HOMEPAGE      = 2;
+    private final int COMPANY       = 3;
+    private final int TAGLINE       = 4;
+    private final int CONFIRMATION  = 5;
+
+    // The time that the confirmation view will be shown (milliseconds)
+    private static final int CONFIRMATION_VIEW_DELAY = 1500;
+
+    private MovieDetailPresenter mDetailPresenter;
+    private Palette.Swatch mBrightSwatch;
 
     @InjectViews({
         R.id.activity_movie_detail_title,
@@ -54,59 +67,74 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
         R.id.activity_detail_movie_header_description,
     }) List<TextView> headers;
 
-    @InjectView(R.id.activity_detail_book_info) View overviewContainer;
-    @InjectView(R.id.activity_movie_detail_fab) ImageView fabButton;
-    @InjectView(R.id.activity_movie_detail_cover_wtf) ImageView coverImageView;
-    @InjectView(R.id.activity_movide_detail_confirmation_image) ImageView confirmationView;
-    @InjectView(R.id.activity_movie_detai_confirmation_container) FrameLayout confirmationContainer;
+    @InjectView(R.id.activity_detail_book_info) View mMovieDescriptionContainer;
+    @InjectView(R.id.activity_movie_detail_fab) ImageView mFabButton;
+    @InjectView(R.id.activity_movie_detail_cover_wtf) ImageView mCoverImageView;
+    @InjectView(R.id.activity_movide_detail_confirmation_image) ImageView mConfirmationView;
+    @InjectView(R.id.activity_movie_detai_confirmation_container) FrameLayout mConfirmationContainer;
 
-    @InjectView(R.id.activity_movie_detail_scroll) ObservableScrollView observableScrollView;
-
-    private final int TITLE         = 0;
-    private final int DESCRIPTION   = 1;
-    private final int HOMEPAGE      = 2;
-    private final int COMPANY       = 3;
-    private final int TAGLINE       = 4;
-    private final int CONFIRMATION  = 5;
-
-    private MovieDetailPresenter detailPresenter;
-    private Palette.Swatch mBrightSwatch;
-    private Drawable fabRipple;
-
-    private int coverImageHeight;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        detailPresenter.onResume();
-    }
+    @InjectView(R.id.activity_movie_detail_scroll) ObservableScrollView mObservableScrollView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        getWindow().getSharedElementEnterTransition().addListener(transitionListener);
-        GUIUtils.makeTheStatusbarTranslucent(this);
         ButterKnife.inject(this);
 
-        int moviePosition = getIntent().getIntExtra("movie_position", 0);
+        // Completes the SharedElement transition on Lollipop and higher
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int moviePosition = getIntent().getIntExtra("movie_position", 0);
+            mCoverImageView.setTransitionName("cover" + moviePosition);
+            GUIUtils.makeTheStatusbarTranslucent(this);
+
+            getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+
+                }
+            });
+        } else {
+            GUIUtils.showViewByScale(mFabButton);
+        }
+
         String movieID = getIntent().getStringExtra("movie_id");
-        coverImageView.setTransitionName("cover" + moviePosition);
+        mDetailPresenter = new MovieDetailPresenter(this, movieID);
 
-        fabRipple = getResources().getDrawable(R.drawable.ripple_round);
-        fabButton.setBackground(fabRipple);
-
-        observableScrollView.setScrollViewListener(this);
-
-        detailPresenter = new MovieDetailPresenterImpl(this, movieID);
-        detailPresenter.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mObservableScrollView.setScrollViewListener(this);
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        detailPresenter.onStop();
+        mDetailPresenter.stop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mDetailPresenter.start();
     }
 
     @Override
@@ -128,7 +156,7 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
     @Override
     public void setImage(String url) {
         Bitmap bookCoverBitmap = MoviesActivity.photoCache.get(0);
-        coverImageView.setBackground(new BitmapDrawable(getResources(), bookCoverBitmap));
+        mCoverImageView.setBackground(new BitmapDrawable(getResources(), bookCoverBitmap));
 
         Palette.generateAsync(bookCoverBitmap, this);
     }
@@ -168,7 +196,7 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
 
     @Override
     public void showConfirmationView() {
-        GUIUtils.showViewByRevealEffect(confirmationContainer, fabButton,
+        GUIUtils.showViewByRevealEffect(mConfirmationContainer, mFabButton,
                 GUIUtils.getWindowWidth(this));
         animateConfirmationView();
         startClosingConfirmationView();
@@ -176,7 +204,7 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
 
     @Override
     public void animateConfirmationView() {
-        Drawable drawable = confirmationView.getDrawable();
+        Drawable drawable = mConfirmationView.getDrawable();
 
         if (drawable instanceof Animatable) {
             ((Animatable) drawable).start();
@@ -192,7 +220,7 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                observableScrollView.setVisibility(View.GONE);
+                mObservableScrollView.setVisibility(View.GONE);
                 MovieDetailActivity.this.finishAfterTransition();
             }
         }, milliseconds);
@@ -213,8 +241,8 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
     @Override
     public void onScrollChanged(ScrollView scrollView, int x, int y, int oldx, int oldy) {
 
-        if (y > coverImageView.getHeight()) {
-            movieInfoTextViews.get(TITLE).setTranslationY(y - coverImageView.getHeight());
+        if (y > mCoverImageView.getHeight()) {
+            movieInfoTextViews.get(TITLE).setTranslationY(y - mCoverImageView.getHeight());
 
             if (!isTranslucent) {
                 GUIUtils.setTheStatusbarNotTranslucent(this);
@@ -222,7 +250,7 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
                 isTranslucent = true;
             }
 
-            if (y < coverImageView.getHeight() && isTranslucent) {
+            if (y < mCoverImageView.getHeight() && isTranslucent) {
                 GUIUtils.makeTheStatusbarTranslucent(this);
                 isTranslucent = false;
             }
@@ -233,7 +261,7 @@ public class MovieDetailActivity extends Activity implements MVPDetailView,
         @Override
         public void onTransitionEnd(Transition transition) {
             super.onTransitionEnd(transition);
-            GUIUtils.showViewByScale(fabButton);
+            GUIUtils.showViewByScale(mFabButton);
         }
     };
 }
