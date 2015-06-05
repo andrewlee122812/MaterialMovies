@@ -3,7 +3,7 @@ package com.yiyo.materialmovies.materialmovies.mvp.views;
 /**
  * Created by sumset on 25/05/15.
  */
-public interface MVPDetailView extends MVPView {
+public interface DetailView extends MVPView {
 
     public void setImage (String url);
 
