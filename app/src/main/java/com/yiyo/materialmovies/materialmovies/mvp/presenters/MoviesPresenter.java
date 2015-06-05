@@ -3,6 +3,7 @@ package com.yiyo.materialmovies.materialmovies.mvp.presenters;
 import com.squareup.otto.Subscribe;
 import com.yiyo.materialmovies.common.utils.BusProvider;
 import com.yiyo.materialmovies.common.utils.Constants;
+import com.yiyo.materialmovies.domain.ConfigurationUseCaseController;
 import com.yiyo.materialmovies.domain.GetMoviesUseCaseController;
 import com.yiyo.materialmovies.domain.GetMoviesUsecase;
 import com.yiyo.materialmovies.domain.Usecase;
@@ -19,21 +20,6 @@ public class MoviesPresenter extends Presenter {
 
     public MoviesPresenter(MoviesView mMoviesView) {
         this.mMoviesView = mMoviesView;
-    }
-
-    @Override
-    public void onCreate() {
-        BusProvider.getUIBusInstance().register(this);
-
-        mMoviesView.showLoading();
-
-        Usecase getPopularShows = new GetMoviesUseCaseController(GetMoviesUsecase.TV_MOVIES);
-        getPopularShows.execute();
-    }
-
-    @Override
-    public void onStop() {
-        BusProvider.getUIBusInstance().unregister(this);
     }
 
     @Subscribe
@@ -57,7 +43,7 @@ public class MoviesPresenter extends Presenter {
 
         mMoviesView.showLoading();
 
-        Usecase configureUsecase = new ConfigurationUsecaseController(
+        Usecase configureUsecase = new ConfigurationUseCaseController(
                 RestMovieSource.getInstance(), BusProvider.getUIBusInstance());
         configureUsecase.execute();
     }
