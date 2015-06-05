@@ -1,6 +1,7 @@
 package com.yiyo.materialmovies.materialmovies.views.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.yiyo.materialmovies.common.utils.Constants;
 import com.yiyo.materialmovies.materialmovies.R;
-import com.yiyo.materialmovies.materialmovies.utils.MyOwnClickListener;
+import com.yiyo.materialmovies.materialmovies.utils.RecyclerViewClickListener;
 import com.yiyo.materialmovies.model.entities.TvMovie;
 
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.List;
 public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     private final List<TvMovie> movieList;
-    public MyOwnClickListener myOwnClickListener;
+    public RecyclerViewClickListener recyclerViewClickListener;
     private Context context;
 
     public MoviesAdapter(List<TvMovie> movieList) {
@@ -34,8 +36,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         return movieList;
     }
 
-    public void setMyOwnClickListener(MyOwnClickListener myOwnClickListener) {
-        this.myOwnClickListener = myOwnClickListener;
+    public void setRecyclerViewClickListener(RecyclerViewClickListener recyclerViewClickListener) {
+        this.recyclerViewClickListener = recyclerViewClickListener;
     }
 
     @Override
@@ -45,38 +47,55 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
         this.context = viewGroup.getContext();
 
-        return new MovieViewHolder(rowView, myOwnClickListener);
+        return new MovieViewHolder(rowView, recyclerViewClickListener);
     }
 
     @Override
-    public void onBindViewHolder(MovieViewHolder holder, int position) {
+    public void onBindViewHolder(MovieViewHolder holder, final int position) {
 
         TvMovie selectedMovie = movieList.get(position);
 
         holder.titleTextView.setText(selectedMovie.getTitle());
-        holder.coverImageView.setTransitionName("cover" + position);
 
-        String posterUrl = Constants.POSTER_PREFIX + selectedMovie.getPosterPath();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            holder.coverImageView.setTransitionName("cover" + position);
+        }
+
+        String posterUrl = Constants.BASIC_STATIC_URL + selectedMovie.getPosterPath();
 
         Picasso.with(context)
                 .load(posterUrl)
-                .into(holder.coverImageView);
+                .into(holder.coverImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        movieList.get(position).setMovieReady(true);
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+    }
+
+    public boolean isMovieReady(int position) {
+        return movieList.get(position).isMovieReady();
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return movieList.size();
     }
 }
 
 class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private final MyOwnClickListener onClickListener;
+    private final RecyclerViewClickListener onClickListener;
     TextView titleTextView;
     TextView authorTextView;
     ImageView coverImageView;
 
-    public MovieViewHolder(View itemView, MyOwnClickListener onClickListener) {
+    public MovieViewHolder(View itemView, RecyclerViewClickListener onClickListener) {
         super(itemView);
 
         titleTextView = (TextView) itemView.findViewById(R.id.item_movie_title);
@@ -84,6 +103,10 @@ class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickLis
         coverImageView.setDrawingCacheEnabled(true);
         coverImageView.setOnClickListener(this);
         this.onClickListener = onClickListener;
+    }
+
+    public void setReady(boolean ready) {
+        coverImageView.setTag(ready);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.yiyo.materialmovies.model.rest;
 
+import com.yiyo.materialmovies.model.entities.ConfigurationResponse;
 import com.yiyo.materialmovies.model.entities.MovieDetailResponse;
 import com.yiyo.materialmovies.model.entities.PopularMoviesApiResponse;
 import com.yiyo.materialmovies.model.entities.PopularShowsApiResponse;
@@ -23,4 +24,7 @@ public interface MovieDatabaseAPI {
     @GET("/movie/{id}")
     void getMovieDetail(@Query("api_key") String apiKey, @Path("id") String id,
                         Callback<MovieDetailResponse> callback);
+
+    @GET("/configuration")
+    void getConfiguration(@Query("api_key") String apiKey, Callback<ConfigurationResponse> response);
 }

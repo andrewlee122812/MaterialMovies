@@ -2,9 +2,11 @@ package com.yiyo.materialmovies.model;
 
 public interface MediaDataSource {
 
-    public void getShows();
+    void getShows();
 
-    public void getMovies();
+    void getMovies();
 
-    public void getDetailMovie(String id);
+    void getDetailMovie(String id);
+
+    void getConfiguration();
 }

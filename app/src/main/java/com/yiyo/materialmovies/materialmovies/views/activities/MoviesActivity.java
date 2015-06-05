@@ -4,6 +4,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,12 +18,13 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.yiyo.materialmovies.materialmovies.R;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.MoviesPresenter;
 import com.yiyo.materialmovies.materialmovies.mvp.views.MoviesView;
-import com.yiyo.materialmovies.materialmovies.utils.MyOwnClickListener;
+import com.yiyo.materialmovies.materialmovies.utils.RecyclerViewClickListener;
 import com.yiyo.materialmovies.materialmovies.utils.RecyclerInsetsDecoration;
 import com.yiyo.materialmovies.materialmovies.views.adapters.MoviesAdapter;
 import com.yiyo.materialmovies.materialmovies.views.fragments.NavigationDrawerFragment;
@@ -35,7 +37,7 @@ import butterknife.InjectView;
 
 
 public class MoviesActivity extends AppCompatActivity implements MoviesView,
-        MyOwnClickListener, View.OnClickListener {
+        RecyclerViewClickListener, View.OnClickListener {
 
     /**
      * Number of columns in the RecyclerView
@@ -87,7 +89,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
     @Override
     protected void onStop() {
         super.onStop();
-        mMoviesPresenter.onStop();
+        mMoviesPresenter.stop();
     }
 
     @Override
@@ -126,7 +128,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
     @Override
     public void showMovies(List<TvMovie> movieList) {
         mMoviesAdapter = new MoviesAdapter(movieList);
-        mMoviesAdapter.setMyOwnClickListener(this);
+        mMoviesAdapter.setRecyclerViewClickListener(this);
         mRecycler.setAdapter(mMoviesAdapter);
     }
 
@@ -152,25 +154,28 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
 
     @Override
     public void onClick(View v, int position) {
-        Intent i = new Intent (MoviesActivity.this, MovieDetailActivity.class);
+        Intent movieDetailActivityIntent = new Intent (MoviesActivity.this, MovieDetailActivity.class);
 
         String movieID = mMoviesAdapter.getMovieList().get(position).getId();
-
-        i.putExtra("movie_id", movieID);
-        i.putExtra("movie_position", position);
+        movieDetailActivityIntent.putExtra("movie_id", movieID);
 
         ImageView coverImage = (ImageView) v.findViewById(R.id.item_movie_cover);
         photoCache.put(0, coverImage.getDrawingCache());
 
-        if () {
+        if (mMoviesAdapter.isMovieReady(position)) {
+            // Perform a SharedElement transition on Lollipop and higher
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                movieDetailActivityIntent.putExtra("movie_position", position);
 
-        }
-
-        // Setup the transition to the detail activity
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this,
+                // Setup the transition to the detail activity
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this,
                         new Pair<View, String>(v, "cover" + position));
 
-        startActivity(i, options.toBundle());
+                startActivity(movieDetailActivityIntent, options.toBundle());
+            }
+        } else {
+            Toast.makeText(this, "Movie loading, please wait", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private RecyclerView.OnScrollListener recyclerScrollListener = new RecyclerView.OnScrollListener() {
@@ -179,10 +184,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-
-            if (toolbar == null) {
-                throw new IllegalStateException("BooksFragment has not a reference of the main toolbar");
-            }
 
             // Is Scrolling up
             if (dy > 10) {
@@ -197,21 +198,19 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
                     flag = false;
                 }
             }
-
-            lasdDy = dy;
         }
     };
 
     private void showToolbar() {
-        toolbar.startAnimation(AnimationUtils.loadAnimation(this, R.anim.translate_up_off));
+        mToolbar.startAnimation(AnimationUtils.loadAnimation(this, R.anim.translate_up_off));
     }
 
     private void hideToolbar() {
-        toolbar.startAnimation(AnimationUtils.loadAnimation(this, R.anim.translate_up_on));
+        mToolbar.startAnimation(AnimationUtils.loadAnimation(this, R.anim.translate_up_on));
     }
 
     @Override
     public void onClick(View v) {
-
+        mNavigationDrawerFragment.openFragment();
     }
 }

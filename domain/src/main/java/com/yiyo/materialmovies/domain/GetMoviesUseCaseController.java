@@ -78,7 +78,6 @@ public class GetMoviesUseCaseController implements GetMoviesUsecase, GetMoviesUs
             case GetMoviesUsecase.TV_MOVIES:
                 getPopularMovies();
                 break;
-
             case GetMoviesUsecase.TV_SHOWS:
                 getPopularShows();
                 break;
