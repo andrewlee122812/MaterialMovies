@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -19,7 +20,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.Toolbar;
+
 
 import com.yiyo.materialmovies.materialmovies.R;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.MoviesPresenter;
@@ -56,8 +57,9 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     @InjectView(R.id.recycler_popular_movies) RecyclerView mRecycler;
-    @InjectView(R.id.activity_main_progress) ProgressBar mProgressBar;
-    @InjectView(R.id.activity_main_toolbar) Toolbar mToolbar;
+    @InjectView(R.id.activity_movies_progress) ProgressBar mProgressBar;
+    @InjectView(R.id.activity_main_toolbar)
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +68,10 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
         ButterKnife.inject(this);
 
         // Fijar el Toolbar como el SupportActionBar
-        setActionBar(mToolbar);
-        getActionBar().setTitle("");
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("");
 
-        getActionBar().setHomeAsUpIndicator(getDrawable(R.drawable.ic_menu_white_24dp));
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         mToolbar.setNavigationOnClickListener(this);
 
         mRecycler.setLayoutManager(new GridLayoutManager(this, COLUMNS));
@@ -172,6 +174,8 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
                         new Pair<View, String>(v, "cover" + position));
 
                 startActivity(movieDetailActivityIntent, options.toBundle());
+            } else {
+                startActivity(movieDetailActivityIntent);
             }
         } else {
             Toast.makeText(this, "Movie loading, please wait", Toast.LENGTH_SHORT).show();
