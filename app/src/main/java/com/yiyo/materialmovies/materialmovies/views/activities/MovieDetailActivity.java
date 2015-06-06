@@ -14,6 +14,7 @@ import android.support.v7.graphics.Palette;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -55,25 +56,24 @@ public class MovieDetailActivity extends Activity implements DetailView,
     private Palette.Swatch mBrightSwatch;
 
     @InjectViews({
-        R.id.activity_movie_detail_title,
-        R.id.activity_movie_detail_content,
-        R.id.activity_detail_homepage_value,
-        R.id.activity_detail_company_value,
-        R.id.activity_detail_tagline_value,
-        R.id.activity_movie_detail_confirmation_text,
+        R.id.activity_detail_title,
+        R.id.activity_detail_content,
+        R.id.activity_detail_homepage,
+        R.id.activity_detail_company,
+        R.id.activity_detail_tagline,
+        R.id.activity_detail_confirmation_text,
     }) List<TextView> movieInfoTextViews;
 
     @InjectViews({
         R.id.activity_detail_header_tagline,
-        R.id.activity_detail_movie_header_description,
+        R.id.activity_detail_header_description,
     }) List<TextView> headers;
 
     @InjectView(R.id.activity_detail_book_info) View mMovieDescriptionContainer;
-    @InjectView(R.id.activity_movie_detail_fab) ImageView mFabButton;
-    @InjectView(R.id.activity_movie_detail_cover_wtf) ImageView mCoverImageView;
-    @InjectView(R.id.activity_movide_detail_confirmation_image) ImageView mConfirmationView;
-    @InjectView(R.id.activity_movie_detai_confirmation_container) FrameLayout mConfirmationContainer;
-
+    @InjectView(R.id.activity_detail_fab) ImageView mFabButton;
+    @InjectView(R.id.activity_detail_cover) ImageView mCoverImageView;
+    @InjectView(R.id.activity_detail_confirmation_image) ImageView mConfirmationView;
+    @InjectView(R.id.activity_detail_confirmation_container) FrameLayout mConfirmationContainer;
     @InjectView(R.id.activity_movie_detail_scroll) ObservableScrollView mObservableScrollView;
 
     @Override
@@ -171,7 +171,32 @@ public class MovieDetailActivity extends Activity implements DetailView,
     }
 
     public void colorBrightElements(Palette.Swatch brightSwatch) {
-        // TODO: Implementar este método
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Drawable drawable = mConfirmationView.getDrawable();
+            drawable.setColorFilter(brightSwatch.getRgb(), PorterDuff.Mode.MULTIPLY);
+        } else {
+            mConfirmationView.setColorFilter(brightSwatch.getRgb(), PorterDuff.Mode.MULTIPLY);
+        }
+
+        movieInfoTextViews.get(CONFIRMATION).setTextColor(brightSwatch.getRgb());
+        movieInfoTextViews.get(TITLE).setTextColor(brightSwatch.getTitleTextColor());
+        movieInfoTextViews.get(TITLE).setBackgroundColor(brightSwatch.getRgb());
+
+        mBrightSwatch = brightSwatch;
+
+        if (brightSwatch != null) {
+
+            if (movieInfoTextViews.get(HOMEPAGE).getVisibility() == View.VISIBLE) {
+                GUIUtils.tintAndSetCompoundDrawable(this, R.drawable.ic_domain_white_24dp,
+                        brightSwatch.getRgb(), movieInfoTextViews.get(HOMEPAGE));
+            }
+            if (movieInfoTextViews.get(COMPANY).getVisibility() == View.VISIBLE) {
+                GUIUtils.tintAndSetCompoundDrawable(this, R.drawable.ic_public_white_24dp,
+                        brightSwatch.getRgb(), movieInfoTextViews.get(COMPANY));
+            }
+
+            ButterKnife.apply(headers, GUIUtils.setter, brightSwatch.getRgb());
+        }
     }
 
     @Override
@@ -215,44 +240,71 @@ public class MovieDetailActivity extends Activity implements DetailView,
         this.finish();
     }
 
+    /**
+     * Show a confirmation view with a reveal animation if the android version
+     * is v21 or higher, otherwise the view visibility is set to visible without
+     * an animation
+     */
     @Override
     public void showConfirmationView() {
-        GUIUtils.showViewByRevealEffect(mConfirmationContainer, mFabButton,
-                GUIUtils.getWindowWidth(this));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            GUIUtils.showViewByRevealEffect(mConfirmationContainer, mFabButton,
+                    GUIUtils.getWindowWidth(this));
+        } else {
+            mConfirmationContainer.setVisibility(View.VISIBLE);
+        }
+
         animateConfirmationView();
         startClosingConfirmationView();
     }
 
+    /**
+     * Starts an animation provided by a <animation-drawable> on Lollipop &
+     * higher versions, in lower versions a simple set with a scale and a rotate
+     * animation is shown
+     */
     @Override
     public void animateConfirmationView() {
+
         Drawable drawable = mConfirmationView.getDrawable();
 
-        if (drawable instanceof Animatable) {
-            ((Animatable) drawable).start();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (drawable instanceof Animatable) {
+                ((Animatable) drawable).start();
+            }
+        } else {
+            mConfirmationView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.appear_rotate));
         }
     }
 
     @Override
     public void startClosingConfirmationView() {
 
-        int milliseconds = 1500;
-        getWindow().setReturnTransition(new Slide());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setReturnTransition(new Slide());
+        }
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mObservableScrollView.setVisibility(View.GONE);
-                MovieDetailActivity.this.finishAfterTransition();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    MovieDetailActivity.this.finishAfterTransition();
+                } else {
+                    MovieDetailActivity.this.finish();
+                }
             }
-        }, milliseconds);
+        }, CONFIRMATION_VIEW_DELAY);
     }
 
     @Override
     public Context getContext() {
-        return null;
+        return this;
     }
 
-    @OnClick(R.id.activity_movie_detail_fab)
+    @OnClick(R.id.activity_detail_fab)
     public void onClick() {
         showConfirmationView();
     }
@@ -266,23 +318,23 @@ public class MovieDetailActivity extends Activity implements DetailView,
             movieInfoTextViews.get(TITLE).setTranslationY(y - mCoverImageView.getHeight());
 
             if (!isTranslucent) {
-                GUIUtils.setTheStatusbarNotTranslucent(this);
-                getWindow().setStatusBarColor(mBrightSwatch.getRgb());
+
                 isTranslucent = true;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    GUIUtils.setTheStatusbarNotTranslucent(this);
+                    getWindow().setStatusBarColor(mBrightSwatch.getRgb());
+                }
             }
 
             if (y < mCoverImageView.getHeight() && isTranslucent) {
-                GUIUtils.makeTheStatusbarTranslucent(this);
-                isTranslucent = false;
+
+                movieInfoTextViews.get(TITLE).setTranslationY(0);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    GUIUtils.makeTheStatusbarTranslucent(this);
+                    isTranslucent = false;
+                }
             }
         }
     }
-
-    private final MyOwnTransitionListener transitionListener = new MyOwnTransitionListener() {
-        @Override
-        public void onTransitionEnd(Transition transition) {
-            super.onTransitionEnd(transition);
-            GUIUtils.showViewByScale(mFabButton);
-        }
-    };
 }
