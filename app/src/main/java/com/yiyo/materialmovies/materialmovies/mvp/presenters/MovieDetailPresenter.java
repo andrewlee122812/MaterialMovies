@@ -3,7 +3,10 @@ package com.yiyo.materialmovies.materialmovies.mvp.presenters;
 import android.text.TextUtils;
 
 import com.squareup.otto.Subscribe;
+import com.yiyo.materialmovies.common.utils.BusProvider;
 import com.yiyo.materialmovies.common.utils.Constants;
+import com.yiyo.materialmovies.domain.GetMovieDetailUseCaseController;
+import com.yiyo.materialmovies.domain.Usecase;
 import com.yiyo.materialmovies.materialmovies.mvp.views.DetailView;
 import com.yiyo.materialmovies.model.entities.MovieDetailResponse;
 import com.yiyo.materialmovies.model.entities.ProductionCompanies;
@@ -36,12 +39,15 @@ public class MovieDetailPresenter extends Presenter {
 
     @Override
     public void start() {
+        BusProvider.getUIBusInstance().register(this);
 
+        Usecase getDetailUseCase = new GetMovieDetailUseCaseController(mMovieID);
+        getDetailUseCase.execute();
     }
 
     @Override
     public void stop() {
-
+        BusProvider.getUIBusInstance().unregister(this);
     }
 
     public void showTagline(String tagLine) {
@@ -84,7 +90,8 @@ public class MovieDetailPresenter extends Presenter {
 
     public void showHomepage(String homepage) {
 
-        if (!TextUtils.isEmpty(homepage))
+        if (!TextUtils.isEmpty(homepage)) {
             mMovieDetailView.setHomepage(homepage);
+        }
     }
 }
