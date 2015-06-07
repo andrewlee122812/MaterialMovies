@@ -23,11 +23,11 @@ public class RestMovieSource implements MediaDataSource {
     private final MovieDatabaseAPI moviesDBApi;
 
     private RestMovieSource() {
-        RestAdapter parkAppRest = new RestAdapter.Builder()
+        RestAdapter movieAPIRest = new RestAdapter.Builder()
                 .setEndpoint(Constants.MOVIE_DB_HOST)
                 .build();
 
-        moviesDBApi = parkAppRest.create(MovieDatabaseAPI.class);
+        moviesDBApi = movieAPIRest.create(MovieDatabaseAPI.class);
     }
 
     public static RestMovieSource getInstance() {
@@ -61,12 +61,15 @@ public class RestMovieSource implements MediaDataSource {
         @Override
         public void success(Object o, Response response) {
             if (o instanceof MovieDetailResponse) {
+
                 MovieDetailResponse detailResponse = (MovieDetailResponse) o;
                 BusProvider.getRestBusInstance().post(detailResponse);
             } else if (o instanceof PopularMoviesApiResponse) {
+
                 PopularMoviesApiResponse moviesApiResponse = (PopularMoviesApiResponse) o;
                 BusProvider.getRestBusInstance().post(moviesApiResponse);
             } else if (o instanceof ConfigurationResponse) {
+
                 ConfigurationResponse configurationResponse = (ConfigurationResponse) o;
                 BusProvider.getRestBusInstance().post(configurationResponse);
             }

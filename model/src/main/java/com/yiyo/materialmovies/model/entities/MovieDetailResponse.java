@@ -20,7 +20,7 @@ public class MovieDetailResponse {
     private String overview;
     private Number popularity;
     private String posterPath;
-    private List productionCompanies;
+    private List<ProductionCompanies> productionCompanies;
     private List productionCountries;
     private String releaseDate;
     private Number revenue;
@@ -137,7 +137,7 @@ public class MovieDetailResponse {
         this.posterPath = posterPath;
     }
 
-    public List getProductionCompanies() {
+    public List<ProductionCompanies> getProductionCompanies() {
         return productionCompanies;
     }
 

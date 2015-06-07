@@ -13,7 +13,7 @@ public class PopularMoviesApiResponse extends ApiResponse {
     private Number totalResults;
 
     public Number getTotalResults() {
-        return totalResults;
+        return this.totalResults;
     }
 
     public void setTotal_results(Number totalResults) {
@@ -21,7 +21,7 @@ public class PopularMoviesApiResponse extends ApiResponse {
     }
 
     public Number getPage() {
-        return page;
+        return this.page;
     }
 
     public void setPage(Number page) {
@@ -37,7 +37,7 @@ public class PopularMoviesApiResponse extends ApiResponse {
     }
 
     public Number getTotalPages() {
-        return totalPages;
+        return this.totalPages;
     }
 
     public void setTotalPages(Number totalPages) {
