@@ -25,7 +25,6 @@ import com.yiyo.materialmovies.materialmovies.R;
 import com.yiyo.materialmovies.materialmovies.mvp.presenters.MovieDetailPresenter;
 import com.yiyo.materialmovies.materialmovies.mvp.views.DetailView;
 import com.yiyo.materialmovies.materialmovies.utils.GUIUtils;
-import com.yiyo.materialmovies.materialmovies.utils.MyOwnTransitionListener;
 import com.yiyo.materialmovies.materialmovies.views.custom_views.ObservableScrollView;
 import com.yiyo.materialmovies.materialmovies.views.custom_views.ScrollViewListener;
 

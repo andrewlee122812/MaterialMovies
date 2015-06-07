@@ -9,5 +9,5 @@ import android.content.Context;
  *
  */
 public interface MVPView {
-    public Context getContext();
+    Context getContext();
 }
