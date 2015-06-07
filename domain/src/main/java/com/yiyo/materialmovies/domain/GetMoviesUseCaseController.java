@@ -29,7 +29,7 @@ public class GetMoviesUseCaseController implements GetMoviesUsecase, GetMoviesUs
             throw new IllegalArgumentException("MediaDataSource & the event bus cannot be null");
         }
 
-        this.dataSource = RestMovieSource.getInstance();
+        this.dataSource = dataSource;
         this.mode = mode;
         this.uiBus = uiBus;
 
@@ -64,8 +64,6 @@ public class GetMoviesUseCaseController implements GetMoviesUsecase, GetMoviesUs
         switch (mode) {
             case GetMoviesUsecase.TV_MOVIES:
                 uiBus.post(response);
-                break;
-            case GetMoviesUsecase.TV_SHOWS:
                 break;
         }
 

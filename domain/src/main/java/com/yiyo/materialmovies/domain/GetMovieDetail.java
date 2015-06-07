@@ -7,7 +7,7 @@ import com.yiyo.materialmovies.model.entities.MovieDetailResponse;
  */
 public interface GetMovieDetail extends Usecase {
 
-    public void requestMovieDetail(String id);
+    void requestMovieDetail(String id);
 
-    public void sendResponseToPresenter(MovieDetailResponse response);
+    void sendResponseToPresenter(MovieDetailResponse response);
 }

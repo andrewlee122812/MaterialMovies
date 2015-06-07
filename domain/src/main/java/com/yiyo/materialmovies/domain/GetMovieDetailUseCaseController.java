@@ -1,6 +1,5 @@
 package com.yiyo.materialmovies.domain;
 
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.yiyo.materialmovies.common.utils.BusProvider;
 import com.yiyo.materialmovies.model.MediaDataSource;

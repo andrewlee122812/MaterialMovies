@@ -1,6 +1,7 @@
 package com.yiyo.materialmovies.domain;
 
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import com.yiyo.materialmovies.common.utils.BusProvider;
 import com.yiyo.materialmovies.model.MediaDataSource;
 import com.yiyo.materialmovies.model.entities.ConfigurationResponse;
@@ -21,6 +22,7 @@ public class ConfigurationUseCaseController implements ConfigurationUseCase {
         BusProvider.getRestBusInstance().register(this);
     }
 
+    @Subscribe
     @Override
     public void onConfigurationReceived(ConfigurationResponse configuration) {
         BusProvider.getRestBusInstance().unregister(this);
