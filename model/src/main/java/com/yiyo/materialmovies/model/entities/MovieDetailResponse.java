@@ -1,5 +1,7 @@
 package com.yiyo.materialmovies.model.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -8,29 +10,53 @@ import java.util.List;
 public class MovieDetailResponse {
 
     private boolean adult;
-    private String backdropPath;
-    private BelongsToCollection belongsToCollection;
     private Number budget;
     private List genres;
     private String homepage;
     private Number id;
-    private String imdbId;
-    private String originalLanguage;
-    private String originalTitle;
     private String overview;
     private Number popularity;
-    private String posterPath;
-    private List<ProductionCompanies> productionCompanies;
-    private List productionCountries;
-    private String releaseDate;
     private Number revenue;
     private Number runtime;
-    private List spokenLanguages;
     private String status;
     private String tagline;
     private String title;
     private boolean video;
+
+    @SerializedName("backdrop_path")
+    private String backdropPath;
+
+    @SerializedName("belongs_to_collection")
+    private BelongsToCollection belongsToCollection;
+
+    @SerializedName("imdb_id")
+    private String imdbId;
+
+    @SerializedName("original_language")
+    private String originalLanguage;
+
+    @SerializedName("original_title")
+    private String originalTitle;
+
+    @SerializedName("poster_path")
+    private String posterPath;
+
+    @SerializedName("production_companies")
+    private List<ProductionCompanies> productionCompanies;
+
+    @SerializedName("production_countries")
+    private List productionCountries;
+
+    @SerializedName("release_date")
+    private String releaseDate;
+
+    @SerializedName("spoken_languages")
+    private List spokenLanguages;
+
+    @SerializedName("vote_average")
     private Number voteAverage;
+
+    @SerializedName("vote_count")
     private Number voteCount;
 
     public boolean isAdult() {

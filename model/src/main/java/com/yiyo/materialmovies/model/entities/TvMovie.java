@@ -1,19 +1,28 @@
 package com.yiyo.materialmovies.model.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by yiyo on 10/05/15.
  */
 public class TvMovie {
 
     private String adult;
+
+    @SerializedName("backdrop_path")
     private String backdropPath;
     private String id;
+    @SerializedName("original_title")
     private String originalTitle;
+    @SerializedName("release_date")
     private String releaseDate;
+    @SerializedName("poster_path")
     private String posterPath;
     private String popularity;
     private String title;
+    @SerializedName("vote_average")
     private String voteAverage;
+    @SerializedName("vote_count")
     private String voteCount;
     private String overview;
     private boolean movieReady;

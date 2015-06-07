@@ -1,5 +1,7 @@
 package com.yiyo.materialmovies.model.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Class that respresents the configuration in the model layer,
  *
@@ -11,6 +13,7 @@ package com.yiyo.materialmovies.model.entities;
 public class ConfigurationResponse {
 
     private ConfigurationImages images;
+    @SerializedName("change_keys")
     private String[] changeKeys;
 
     public ConfigurationImages getImages() {
@@ -18,12 +21,25 @@ public class ConfigurationResponse {
     }
 
     public class ConfigurationImages {
+        @SerializedName("base_url")
         private String baseUrl;
+
+        @SerializedName("secure_base_url")
         private String secureBaseUrl;
+
+        @SerializedName("backdrop_sizes")
         private String[] backdropSizes;
+
+        @SerializedName("logo_sizes")
         private String[] logoSizes;
+
+        @SerializedName("poster_sizes")
         private String[] posterSizes;
+
+        @SerializedName("profile_sizes")
         private String[] profileSizes;
+
+        @SerializedName("still_sizes")
         private String[] stillSizes;
 
         public String getBaseUrl() {

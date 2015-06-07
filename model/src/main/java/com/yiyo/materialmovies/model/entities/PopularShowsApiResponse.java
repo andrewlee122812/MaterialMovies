@@ -1,5 +1,7 @@
 package com.yiyo.materialmovies.model.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -9,7 +11,11 @@ public class PopularShowsApiResponse extends ApiResponse {
 
     private Number page;
     private List<TvShow> results;
+
+    @SerializedName("total_pages")
     private Number totalPages;
+
+    @SerializedName("total_results")
     private Number totalResults;
 
     public Number getTotalResults() {

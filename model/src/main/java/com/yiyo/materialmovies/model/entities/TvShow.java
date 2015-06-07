@@ -1,21 +1,36 @@
 package com.yiyo.materialmovies.model.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
  * Created by sumset on 22/05/15.
  */
 public class TvShow {
-
-    private String backdropPath;
-    private String firstAirDate;
     private Number id;
     private String name;
-    private List originCountry;
-    private String originalName;
     private Number popularity;
+
+    @SerializedName("backdrop_path")
+    private String backdropPath;
+
+    @SerializedName("first_air_date")
+    private String firstAirDate;
+
+    @SerializedName("origin_country")
+    private List originCountry;
+
+    @SerializedName("original_name")
+    private String originalName;
+
+    @SerializedName("poster_path")
     private String posterPath;
+
+    @SerializedName("vote_average")
     private Number voteAverage;
+
+    @SerializedName("vote_count")
     private Number voteCount;
 
     public String getBackdropPath() {

@@ -1,19 +1,22 @@
 package com.yiyo.materialmovies.model.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by yiyo on 7/06/15.
  */
 public class SpokenLanguages {
 
-    private String iso_639_1;
+    @SerializedName("iso_639_1")
+    private String iso6391;
     private String name;
 
-    public String getIso_639_1() {
-        return iso_639_1;
+    public String getIso6391() {
+        return iso6391;
     }
 
-    public void setIso_639_1(String iso_639_1) {
-        this.iso_639_1 = iso_639_1;
+    public void setIso6391(String iso6391) {
+        this.iso6391 = iso6391;
     }
 
     public String getName() {

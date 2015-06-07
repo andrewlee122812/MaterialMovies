@@ -1,13 +1,19 @@
 package com.yiyo.materialmovies.model.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by sumset on 22/05/15.
  */
 public class BelongsToCollection {
 
-    private String backdropPath;
     private Number id;
     private String name;
+
+    @SerializedName("backdrop_path")
+    private String backdropPath;
+
+    @SerializedName("poster_path")
     private String posterPath;
 
     public String getBackdropPath() {
