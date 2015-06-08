@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,10 +66,10 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
         ButterKnife.inject(this);
 
         // Fijar el Toolbar como el SupportActionBar
+        mToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         mToolbar.setNavigationOnClickListener(this);
 
         mRecycler.setLayoutManager(new GridLayoutManager(this, COLUMNS));
