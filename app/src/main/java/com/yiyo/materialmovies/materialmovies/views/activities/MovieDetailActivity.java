@@ -41,12 +41,12 @@ import butterknife.OnClick;
 public class MovieDetailActivity extends Activity implements DetailView,
         Palette.PaletteAsyncListener, ScrollViewListener {
 
-    private final int TITLE         = 0;
-    private final int DESCRIPTION   = 1;
-    private final int HOMEPAGE      = 2;
-    private final int COMPANY       = 3;
-    private final int TAGLINE       = 4;
-    private final int CONFIRMATION  = 5;
+    private static final int TITLE         = 0;
+    private static final int DESCRIPTION   = 1;
+    private static final int HOMEPAGE      = 2;
+    private static final int COMPANY       = 3;
+    private static final int TAGLINE       = 4;
+    private static final int CONFIRMATION  = 5;
 
     // The time that the confirmation view will be shown (milliseconds)
     private static final int CONFIRMATION_VIEW_DELAY = 1500;
@@ -77,17 +77,20 @@ public class MovieDetailActivity extends Activity implements DetailView,
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.inject(this);
 
         // Completes the SharedElement transition on Lollipop and higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
             int moviePosition = getIntent().getIntExtra("movie_position", 0);
             mCoverImageView.setTransitionName("cover" + moviePosition);
             GUIUtils.makeTheStatusbarTranslucent(this);
 
-            getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
+            getWindow().getSharedElementEnterTransition().addListener(
+                new Transition.TransitionListener() {
                 @Override
                 public void onTransitionStart(Transition transition) {
 
@@ -95,7 +98,7 @@ public class MovieDetailActivity extends Activity implements DetailView,
 
                 @Override
                 public void onTransitionEnd(Transition transition) {
-
+                    GUIUtils.showViewByScale(mFabButton);
                 }
 
                 @Override
@@ -141,18 +144,21 @@ public class MovieDetailActivity extends Activity implements DetailView,
     public void onGenerated(Palette palette) {
 
         if (palette != null) {
+
             Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
-
             Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
-
             Palette.Swatch lightSwatch = palette.getLightVibrantSwatch();
 
             if (lightSwatch != null) {
+
                 mMovieDescriptionContainer.setBackgroundColor(lightSwatch.getRgb());
+
                 ButterKnife.apply(movieInfoTextViews, GUIUtils.setter, lightSwatch.getTitleTextColor());
+
                 mFabButton.getBackground().setColorFilter(lightSwatch.getRgb(), PorterDuff.Mode.MULTIPLY);
                 mConfirmationContainer.setBackgroundColor(lightSwatch.getRgb());
             } else {
+
                 int primaryColor = getResources().getColor(R.color.theme_primary);
                 mFabButton.getBackground().setColorFilter(primaryColor, PorterDuff.Mode.MULTIPLY);
                 mConfirmationView.setBackgroundColor(primaryColor);
@@ -170,7 +176,9 @@ public class MovieDetailActivity extends Activity implements DetailView,
     }
 
     public void colorBrightElements(Palette.Swatch brightSwatch) {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
             Drawable drawable = mConfirmationView.getDrawable();
             drawable.setColorFilter(brightSwatch.getRgb(), PorterDuff.Mode.MULTIPLY);
         } else {
@@ -200,6 +208,7 @@ public class MovieDetailActivity extends Activity implements DetailView,
 
     @Override
     public void setImage(String url) {
+
         Bitmap bookCoverBitmap = MoviesActivity.photoCache.get(0);
         mCoverImageView.setBackground(new BitmapDrawable(getResources(), bookCoverBitmap));
 
@@ -248,6 +257,7 @@ public class MovieDetailActivity extends Activity implements DetailView,
     public void showConfirmationView() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
             GUIUtils.showViewByRevealEffect(mConfirmationContainer, mFabButton,
                     GUIUtils.getWindowWidth(this));
         } else {
@@ -292,7 +302,7 @@ public class MovieDetailActivity extends Activity implements DetailView,
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     MovieDetailActivity.this.finishAfterTransition();
                 } else {
-                    MovieDetailActivity.this.finish();
+                    MovieDetailActivity.this. finish();
                 }
             }
         }, CONFIRMATION_VIEW_DELAY);
@@ -320,6 +330,7 @@ public class MovieDetailActivity extends Activity implements DetailView,
 
                 isTranslucent = true;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
                     GUIUtils.setTheStatusbarNotTranslucent(this);
                     getWindow().setStatusBarColor(mBrightSwatch.getRgb());
                 }

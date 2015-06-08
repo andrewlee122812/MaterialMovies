@@ -13,8 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.util.SparseArray;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -49,7 +47,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
      * A container used between this activity and MovieDetailActivity
      * to share a Bitmap with a SharedElementTransition
      */
-    public static SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
+    public static SparseArray<Bitmap> photoCache = new SparseArray<>(1);
 
     private MoviesAdapter mMoviesAdapter;
     private MoviesPresenter mMoviesPresenter;
@@ -105,28 +103,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void showMovies(List<TvMovie> movieList) {
         mMoviesAdapter = new MoviesAdapter(movieList);
         mMoviesAdapter.setRecyclerViewClickListener(this);
@@ -155,7 +131,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
 
     @Override
     public void onClick(View v, int position) {
-        Intent movieDetailActivityIntent = new Intent (MoviesActivity.this, MovieDetailActivity.class);
+        Intent movieDetailActivityIntent = new Intent(MoviesActivity.this, MovieDetailActivity.class);
 
         String movieID = mMoviesAdapter.getMovieList().get(position).getId();
         movieDetailActivityIntent.putExtra("movie_id", movieID);
@@ -166,6 +142,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
         if (mMoviesAdapter.isMovieReady(position)) {
             // Perform a SharedElement transition on Lollipop and higher
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
                 movieDetailActivityIntent.putExtra("movie_position", position);
 
                 // Setup the transition to the detail activity
@@ -177,7 +154,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
                 startActivity(movieDetailActivityIntent);
             }
         } else {
-            Toast.makeText(this, "Movie loading, please wait", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Pelicula cargando, por favor espere", Toast.LENGTH_SHORT).show();
         }
     }
 
