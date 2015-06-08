@@ -56,7 +56,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView,
 
     @InjectView(R.id.recycler_popular_movies) RecyclerView mRecycler;
     @InjectView(R.id.activity_movies_progress) ProgressBar mProgressBar;
-    @InjectView(R.id.activity_main_toolbar) Toolbar mToolbar;
+    @InjectView(R.id.activity_movies_toolbar) Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
